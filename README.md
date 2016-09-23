@@ -1,5 +1,5 @@
 # docker-sd-agent
-Server Density Agent Dockerfile for Trusted Builds. https://registry.hub.docker.com/u/serverdensity/
+Server Density Agent Dockerfile. https://hub.docker.com/r/serverdensity/sd-agent/
 
 ## Quick Start
 The default image is ready-to-go. You just need to set your AGENT_KEY and ACCOUNT in the environment.
