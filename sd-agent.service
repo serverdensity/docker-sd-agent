@@ -12,16 +12,14 @@ ExecStartPre=/usr/bin/docker pull serverdensity/sd-agent
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill sd-agent
 ExecStartPre=-/usr/bin/docker rm sd-agent
-ExecStart=/bin/bash -c " \
-  metadata=$(hostnamectl status | head -1 | sed 's/Static hostname://g' | sed 's/ //g'); \
-  docker run --name sd-agent \
+ExecStart= /bin/bash -c "docker run --name sd-agent \
     -h %H \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /proc/mounts:/host/proc/mounts:ro \
     -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
-    -e AGENT_KEY=`etcdctl get /serverdensity/AGENT_KEY` \
+    -e AGENT_KEY=`etcdctl get /serverdensity/agent_key/%H` \
     -e ACCOUNT=`etcdctl get /serverdensity/ACCOUNT` \
-    -e SD_HOSTNAME="$metadata" \
+    -e SD_HOSTNAME=%H \
     serverdensity/sd-agent"
 ExecStop=/usr/bin/docker stop sd-agent
 

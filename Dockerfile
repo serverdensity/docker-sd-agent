@@ -13,13 +13,6 @@ RUN echo "deb https://archive.serverdensity.com/ubuntu/ all main" > /etc/apt/sou
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Configure the Agent
-# 1. Listen to statsd from other containers
-# 2. Turn syslog off
-# 3. Remove dd-agent user from supervisor configuration
-# 4. Remove dd-agent user from init.d configuration
-# 5. Fix permission on /etc/init.d/datadog-agent
-# 6. Remove network check
-# 7. Symlink Dogstatsd to allow standalone execution
 RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/sd-agent/config.cfg \
  && sed -i "/user=sd-agent/d" /etc/sd-agent/supervisor.conf \
  && sed -i 's/AGENTUSER="sd-agent"/AGENTUSER="root"/g' /etc/init.d/sd-agent \
