@@ -6,7 +6,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y apt-transport-htt
 
 # Install the Agent and sd-agent-docker
 RUN echo "deb https://archive.serverdensity.com/ubuntu/ all main" > /etc/apt/sources.list.d/sd-agent.list \
- && curl -Ls https://archive.serverdensity.com/sd-packaging-public.key | sudo apt-key add - \
+ && curl -Ls https://archive.serverdensity.com/sd-packaging-public.key | apt-key add - \
  && apt-get update \
  && apt-get install --no-install-recommends -y sd-agent sd-agent-docker \
  && apt-get clean \
