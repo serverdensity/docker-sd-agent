@@ -14,6 +14,7 @@ RUN echo "deb https://archive.serverdensity.com/ubuntu/ all main" > /etc/apt/sou
 
 # Configure the Agent
 RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/sd-agent/config.cfg \
+ && sed -i -e"s/^.*plugin_directory:.*$/plugin_directory: \/plugins/" /etc/sd-agent/config.cfg \
  && sed -i "/user=sd-agent/d" /etc/sd-agent/supervisor.conf \
  && sed -i 's/AGENTUSER="sd-agent"/AGENTUSER="root"/g' /etc/init.d/sd-agent \
  && chmod +x /etc/init.d/sd-agent
@@ -31,7 +32,7 @@ RUN mv /etc/sd-agent/conf.d/docker_daemon.yaml.example /etc/sd-agent/conf.d/dock
 COPY entrypoint.sh /entrypoint.sh
 
 # Extra conf.d and checks.d
-VOLUME ["/conf.d", "/checks.d"]
+VOLUME ["/conf.d", "/checks.d", "/plugins"]
 
 # Expose supervisord port
 EXPOSE 9001/tcp
