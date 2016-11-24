@@ -26,7 +26,7 @@ The following environment variables can be used when running the container:
 * `PROXY_PASSWORD` - Configures a proxy password for the agent
 
 ## Building the image
-Download the [Dockerfile](DockerFile) and [entrypoint.sh](entrypoint.sh) script, and build the image. 
+Download the [Dockerfile](Dockerfile) and [entrypoint.sh](entrypoint.sh) script, and build the image. 
 
 ```
 docker build -t sd-agent .
