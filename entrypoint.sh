@@ -52,7 +52,9 @@ fi
 if [[ "${DISK_STATS^^}" = "TRUE"]]; then
     sed -i 's/# collect_disk_stats: true/collect_disk_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
-
+if [[ -z $TIMEOUT ]]; then
+    TIMEOUT=10
+fi
 if [[ $TIMEOUT ]]; then
     sed -i 's/# timeout: 10/timeout: ${TIMEOUT}/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
