@@ -22,7 +22,6 @@ RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/sd-agent/config.cf
 # Configure Docker check
 RUN mv /etc/sd-agent/conf.d/docker_daemon.yaml.example /etc/sd-agent/conf.d/docker_daemon.yaml \
  && sed -i 's/#docker_root: \//docker_root: \/host/g' /etc/sd-agent/conf.d/docker_daemon.yaml \
- && sed -i 's/# timeout: 10/timeout: 10/g' /etc/sd-agent/conf.d/docker_daemon.yaml \
  && service sd-agent restart 
 
 COPY entrypoint.sh /entrypoint.sh
