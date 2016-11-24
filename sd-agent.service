@@ -21,6 +21,9 @@ ExecStart= /bin/bash -c "docker run --name sd-agent \
     -e AGENT_KEY=`etcdctl get /serverdensity/agent_key/%H` \
     -e ACCOUNT=`etcdctl get /serverdensity/ACCOUNT` \
     -e SD_HOSTNAME=%H \
+    -e TIMEOUT=10 \
+    -e DISK_STATS=TRUE \
+    -e CONTAINER_SIZE=TRUE \
     serverdensity/sd-agent:latest"
 ExecStop=/usr/bin/docker stop sd-agent
 
