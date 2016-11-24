@@ -24,6 +24,11 @@ The following environment variables can be used when running the container:
 * `PROXY_PORT` - Configures a proxy port for the agent
 * `PROXY_USER` - Configures a proxy user for the agent
 * `PROXY_PASSWORD` - Configures a proxy password for the agent
+* `CONTAINER_SIZE` - Set to `TRUE` to enable container size metrics
+* `IMAGE_STATS` - Set to `TRUE` to enable image stat metrics
+* `IMAGE_SIZE` - Set to `TRUE` to enable image size metrics
+* `DISK_STATS` - Set to `TRUE` to enable disk stat metrics
+* `TIMEOUT` - Set the timeout for the docker_daemon check in seconds
 
 ## Building the image
 Download the [Dockerfile](Dockerfile) and [entrypoint.sh](entrypoint.sh) script, and build the image. 
@@ -37,6 +42,56 @@ Get info regarding the sd-agent service:
 ```
 docker exec sd-agent service sd-agent info
 ```
+
+## Enabling Plugins
+### Official Plugins
+You can enable official plugins by mounting the conf.d & checks.d folders which will be copied to the correct locations for the agent when the container starts. Checks and config files can be found at the [sd-agent repo](https://github.comserverdensity/sd-agent)
+1. Create a a configuration directroy on your host and copy your YAML files to the new directory: 
+```
+mkdir /opt/conf.d
+wget https://raw.githubusercontent.com/serverdensity/sd-agent/master/conf.d/apache.yaml.example -O /opt/conf.d/apache.yaml
+```
+2. Create a checks directory and copy your `check.py` files to the new directory: 
+```
+mkdir /opt/checks.d
+wget https://raw.githubusercontent.com/serverdensity/sd-agent/master/checks.d/apache.py -P /opt/checks.d
+```
+3. When creating the container mount the directories: 
+```
+docker run -d --name sd-agent \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /proc/:/host/proc/:ro \
+	-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+	-v /opt/conf.d:/conf.d:ro \
+	-v /opt/checks.d:/checks.d:ro \	
+	-e AGENT_KEY=$AGENT_KEY \
+	-e ACCOUNT=$ACCOUNT \
+	serverdensity/sd-agent
+```
+It's important to note the addition of `-v /opt/conf.d:/conf.d:ro -v /opt/checks.d:/checks.d:ro`
+
+Now when the container starts the checks and their configs will be copied to the correct directories. 
+
+### Custom plugins 
+1. Create a plugins directory and copy your `check.py` files to the new directory: 
+```
+mkdir /opt/plugins
+touch /opt/plugins/Plugin.py
+```
+2. When creating the container mount the directories: 
+```
+docker run -d --name sd-agent \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /proc/:/host/proc/:ro \
+	-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+	-v /opt/plugins:/plugins:ro \
+	-e AGENT_KEY=$AGENT_KEY \
+	-e ACCOUNT=$ACCOUNT \
+	serverdensity/sd-agent
+```
+It's important to note the addition of `-v /opt/plugins:/plugins:ro`
+
+Now when the container starts your custom plugins will be copied to the correct directories for the agent. 
 
 ## Logs
 ### Copy logs from the container to the host
