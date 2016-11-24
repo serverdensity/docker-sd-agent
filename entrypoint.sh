@@ -34,31 +34,31 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /etc/sd-agent/config.cfg
 fi
 if [[ $LOG_LEVEL ]]; then
-    sed -i -e"s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/sd-agent/config.cfg
+    sed -i -e "s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/sd-agent/config.cfg
 fi
 
 if [[ "${CONTAINER_SIZE^^}" = "TRUE" ]]; then
-    sed -i 's/# collect_container_size: false/collect_container_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e 's/# collect_container_size: false/collect_container_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ "${IMAGE_STATS^^}" = "TRUE" ]]; then
-    sed -i 's/# collect_images_stats: false/collect_images_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e 's/# collect_images_stats: false/collect_images_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ "${IMAGE_SIZE^^}" = "TRUE" ]]; then
-    sed -i 's/# collect_image_size: false/collect_image_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e 's/# collect_image_size: false/collect_image_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ "${DISK_STATS^^}" = "TRUE" ]]; then
-    sed -i 's/# collect_disk_stats: true/collect_disk_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e 's/# collect_disk_stats: true/collect_disk_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
-if [[ -z $TIMEOUT ]]; then
+if [[ -z "$TIMEOUT" ]]; then
     TIMEOUT=10
 fi
 
 if [[ $TIMEOUT ]]; then
-    sed -i 's/# timeout: 10/timeout: ${TIMEOUT}/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i "s/# timeout: 10/timeout: ${TIMEOUT}/g" /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /etc/sd-agent/ \;
