@@ -52,11 +52,17 @@ fi
 if [[ "${DISK_STATS^^}" = "TRUE"]]; then
     sed -i 's/# collect_disk_stats: true/collect_disk_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
+
 if [[ -z $TIMEOUT ]]; then
     TIMEOUT=10
 fi
+
 if [[ $TIMEOUT ]]; then
     sed -i 's/# timeout: 10/timeout: ${TIMEOUT}/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
+
+find /conf.d -name '*.yaml' -exec cp --parents {} /etc/sd-agent/ \;
+
+find /checks.d -name '*.py' -exec cp {} /usr/share/python/sd-agent/checks.d/ \;
 
 /usr/share/python/sd-agent/bin/python /usr/share/python/sd-agent/agent.py foreground
