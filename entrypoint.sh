@@ -37,4 +37,24 @@ if [[ $LOG_LEVEL ]]; then
     sed -i -e"s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/sd-agent/config.cfg
 fi
 
+if [[ "${CONTAINER_SIZE^^}" = "TRUE" ]]; then
+    sed -i 's/# collect_container_size: false/collect_container_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+fi
+
+if [[ "${IMAGE_STATS^^}" = "TRUE"]]; then
+    sed -i 's/# collect_images_stats: false/collect_images_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+fi
+
+if [[ "${IMAGE_SIZE^^}" = "TRUE"]]; then
+    sed -i 's/# collect_image_size: false/collect_image_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+fi
+
+if [[ "${DISK_STATS^^}" = "TRUE"]]; then
+    sed -i 's/# collect_disk_stats: true/collect_disk_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+fi
+
+if [[ $TIMEOUT ]]; then
+    sed -i 's/# timeout: 10/timeout: ${TIMEOUT}/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+fi
+
 /usr/share/python/sd-agent/bin/python /usr/share/python/sd-agent/agent.py foreground
