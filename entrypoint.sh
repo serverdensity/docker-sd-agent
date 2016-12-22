@@ -58,11 +58,14 @@ if [[ -z "$TIMEOUT" ]]; then
 fi
 
 if [[ $TIMEOUT ]]; then
-    sed -i "s/# timeout: 10/timeout: ${TIMEOUT}/g" /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e "s/# timeout: 10/timeout: ${TIMEOUT}/g" /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /etc/sd-agent/ \;
 
 find /checks.d -name '*.py' -exec cp {} /usr/share/python/sd-agent/checks.d/ \;
 
-/usr/share/python/sd-agent/bin/python /usr/share/python/sd-agent/agent.py foreground
+export PATH="/usr/share/python/sd-agent/bin:$PATH"
+
+exec "$@"
+
