@@ -38,19 +38,19 @@ if [[ $LOG_LEVEL ]]; then
 fi
 
 if [[ "${CONTAINER_SIZE^^}" = "TRUE" ]]; then
-    sed -i -e 's/# collect_container_size: false/collect_container_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e "s/# collect_container_size: false/collect_container_size: true/g" /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ "${IMAGE_STATS^^}" = "TRUE" ]]; then
-    sed -i -e 's/# collect_images_stats: false/collect_images_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e "s/# collect_images_stats: false/collect_images_stats: true/g" /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ "${IMAGE_SIZE^^}" = "TRUE" ]]; then
-    sed -i -e 's/# collect_image_size: false/collect_image_size: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e "s/# collect_image_size: false/collect_image_size: true/g" /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ "${DISK_STATS^^}" = "TRUE" ]]; then
-    sed -i -e 's/# collect_disk_stats: true/collect_disk_stats: true/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+    sed -i -e "s/# collect_disk_stats: true/collect_disk_stats: true/g" /etc/sd-agent/conf.d/docker_daemon.yaml
 fi
 
 if [[ -z "$TIMEOUT" ]]; then
@@ -68,4 +68,3 @@ find /checks.d -name '*.py' -exec cp {} /usr/share/python/sd-agent/checks.d/ \;
 export PATH="/usr/share/python/sd-agent/bin:$PATH"
 
 exec "$@"
-
