@@ -1,6 +1,24 @@
 #!/bin/bash
 set -e
 
+if [[ $API_KEY ]]; then
+  if [[ $SD_HOSTNAME ]]; then
+    name=`$SD_HOSTNAME`
+  else
+    name=`hostname -s`
+  fi
+
+  base_url="https://api.serverdensity.io/inventory"
+
+  uri="$base_url/resources?token=$API_KEY&filter={\"name\":\"$name\",\"type\":\"device\"}&fields=[\"agentKey\"]"
+  export AGENT_KEY=`curl -sg $uri | sed -n -e 's/.*"agentKey":"\([0-9a-f]*\)".*/\1/p'`
+
+  if [[ -z "$AGENT_KEY" ]]; then
+    uri="$base_url/devices/?token=$API_KEY"
+    export AGENT_KEY=`curl -sX POST $uri -d "name=$name" | sed -n -e 's/.*"agentKey":"\([0-9a-f]*\)".*/\1/p'`
+  fi
+fi
+
 if [[ $AGENT_KEY ]]; then
     sed -i -e "s/^.*agent_key:.*$/agent_key: ${AGENT_KEY}/" /etc/sd-agent/config.cfg
 else
