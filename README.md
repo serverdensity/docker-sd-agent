@@ -5,12 +5,12 @@ Server Density Agent Dockerfile. https://hub.docker.com/r/serverdensity/sd-agent
 The default image is ready-to-go. You just need to set your AGENT_KEY and ACCOUNT in the environment.
 
 ```
-docker run -d --name sd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
+docker run -d --name sd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
 ```
 You can also enable DEBUG mode and set the hostname in your sd-agent config.cfg
 
 ```
-docker run -d --name sd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT -e LOG_LEVEL=$LOG_LEVEL serverdensity/sd-agent
+docker run -d --name sd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT -e LOG_LEVEL=$LOG_LEVEL serverdensity/sd-agent
 ```
 
 ## Full list of env variables
@@ -69,7 +69,7 @@ The example below is for MySQL, however any plugin can be used.
 
     ```
     docker run -d --name sd-agent \
-        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /var/run/docker.sock:/var/run/docker.sock:ro \
         -v /proc/:/host/proc/:ro \
         -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
         -v /opt/sd-agent/conf.d:/conf.d:ro \
@@ -106,7 +106,7 @@ Now when the container starts the checks and their configs will be copied to the
 
     ```
     docker run -d --name sd-agent \
-        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /var/run/docker.sock:/var/run/docker.sock:ro \
         -v /proc/:/host/proc/:ro \
         -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
         -v /opt/sd-agent/conf.d:/conf.d:ro \
@@ -132,7 +132,7 @@ Now when the container starts your v2 custom plugins will be copied to the corre
 
    ```
     docker run -d --name sd-agent \
-        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /var/run/docker.sock:/var/run/docker.sock:ro \
         -v /proc/:/host/proc/:ro \
         -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
         -v /opt/plugins:/plugins:ro \
@@ -176,17 +176,17 @@ These limitations can be worked around by telling docker not to containerize the
 To enable host network metrics run the container with `--net=host`
 
 ```
-docker run -d --name sd-agent --net=host -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
+docker run -d --name sd-agent --net=host -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
 ```
 
 To enable host process list metrics run the container with `--pid=host`
 
 ```
-docker run -d --name sd-agent --pid=host -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
+docker run -d --name sd-agent --pid=host -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
 ```
 
 Both options can be combined:
 
 ```
-docker run -d --name sd-agent --net=host --pid=host -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
+docker run -d --name sd-agent --net=host --pid=host -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e AGENT_KEY=$AGENT_KEY -e ACCOUNT=$ACCOUNT serverdensity/sd-agent
 ```
