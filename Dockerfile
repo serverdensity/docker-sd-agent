@@ -16,11 +16,12 @@ RUN echo "deb https://archive.serverdensity.com/debian/ jessie main" > /etc/apt/
 
 # Configure the Agent
 RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/sd-agent/config.cfg \
- && sed -i -e"s/^.*plugin_directory:.*$/plugin_directory: \/plugins/" /etc/sd-agent/config.cfg
+ && sed -i -e"s/^.*plugin_directory:.*$/plugin_directory: \/plugins/" /etc/sd-agent/config.cfg \
+ && sed -i -e"s/^.*user=sd-agent.*$/user=root/" /etc/sd-agent/supervisor.conf
 
 # Configure Docker check
 RUN mv /etc/sd-agent/conf.d/docker_daemon.yaml.example /etc/sd-agent/conf.d/docker_daemon.yaml \
- && sed -i 's/#docker_root: \//docker_root: \/host/g' /etc/sd-agent/conf.d/docker_daemon.yaml
+ && sed -i 's/# docker_root: \/host/docker_root: \/host/g' /etc/sd-agent/conf.d/docker_daemon.yaml
 
 COPY entrypoint.sh /entrypoint.sh
 
