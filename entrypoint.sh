@@ -36,6 +36,9 @@ fi
 if [[ $LOG_LEVEL ]]; then
     sed -i -e "s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/sd-agent/config.cfg
 fi
+if [[ $NON_LOCAL_TRAFFIC ]]; then
+    echo "non_local_traffic: true" >> /etc/sd-agent/config.cfg
+fi
 
 if [[ "${CONTAINER_SIZE^^}" = "TRUE" ]]; then
     sed -i -e "s/# collect_container_size: false/collect_container_size: true/g" /etc/sd-agent/conf.d/docker_daemon.yaml

@@ -8,7 +8,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y apt-transport-htt
 RUN echo "deb https://archive.serverdensity.com/debian/ jessie main" > /etc/apt/sources.list.d/sd-agent.list \
  && curl -Ls https://archive.serverdensity.com/sd-packaging-public.key | apt-key add - \
  && apt-get update \
- && apt-get install --no-install-recommends -y sd-agent sd-agent-docker wget \
+ && apt-get install --no-install-recommends -y sd-agent sd-agent-docker sd-agent-sdstatsd wget \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && wget -O /etc/sd-agent/supervisor.conf https://raw.githubusercontent.com/serverdensity/sd-agent/master/packaging/supervisor.conf \
@@ -30,6 +30,9 @@ VOLUME ["/conf.d", "/checks.d", "/plugins"]
 
 # Expose supervisord port
 EXPOSE 9001/tcp
+
+# Expose statsd port
+EXPOSE 8125/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/sd-agent/supervisor.conf"]
