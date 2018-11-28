@@ -16,19 +16,24 @@ docker run -d --name sd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v
 ## Full list of env variables
 The following environment variables can be used when running the container:
 
-* `AGENT_KEY` - Your agent key, can be found in your UI
-* `ACCOUNT` - Your account name
+* `AGENT_KEY` - Your agent key, can be found in your UI *Required*
+* `ACCOUNT` - Your account name *Required*
 * `LOG_LEVEL` - The log level of the agent running in the container
 * `SD_HOSTNAME` - The hostname specified in your containered agent's config.cfg (Note that this does not set the container hostname)
 * `PROXY_HOST` - Configures a proxy host for the agent
 * `PROXY_PORT` - Configures a proxy port for the agent
 * `PROXY_USER` - Configures a proxy user for the agent
 * `PROXY_PASSWORD` - Configures a proxy password for the agent
+* `NON_LOCAL_TRAFFIC` - Enable (non local traffic support)[https://support.serverdensity.com/hc/en-us/articles/360001065203]
 * `CONTAINER_SIZE` - Set to `TRUE` to enable container size metrics
 * `IMAGE_STATS` - Set to `TRUE` to enable image stat metrics
 * `IMAGE_SIZE` - Set to `TRUE` to enable image size metrics
 * `DISK_STATS` - Set to `TRUE` to enable disk stat metrics
 * `TIMEOUT` - Set the timeout for the docker_daemon check in seconds
+* `SDSTATSD` - Set to `TRUE` to enable `sd-agent-sdstatsd`
+* `SDSTATSD_NAMESPACE` - Set a namespace for SDStatsD metrics. This will change `custom.metric` into `namespace.custom.metric`
+* `SDSTATSD_UTF8` - Enables UTF8 decoding for SDStatsD
+* `SDSTATSD_SO_RCVBUF` - The number of bytes allocated to the statsd socket receive buffer
 
 ## Building the image
 Download the [Dockerfile](Dockerfile) and [entrypoint.sh](entrypoint.sh) script, and build the image.
@@ -41,6 +46,48 @@ docker build -t sd-agent .
 Get info regarding the sd-agent service:
 ```
 docker exec sd-agent service sd-agent info
+```
+
+## SDStatsD
+SDStatsD is available in the container but is disabled by default.
+
+### Enabling SDStatsD
+#### Env Variables
+
+To enable SDStatsD pass the env variable `SDSTATSD` to the container. The value does not matter, the container simply checks for the presence of this variable. `NON_LOCAL_TRAFFIC` is also required to allow the agent to receive metrics from any IP address (*NOTE*: This is a potential security risk as it allows metrics to be posted from any IP address. Please ensure that your host configuration does not allow external access to this port to prevent this). For example:
+
+```
+docker run -d --name sd-agent \
+-v /var/run/docker.sock:/var/run/docker.sock:ro \
+-v /proc/:/host/proc/:ro \
+-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+-e AGENT_KEY=$AGENT_KEY \
+-e ACCOUNT=$ACCOUNT \
+-e SDSTATSD="TRUE" \
+-e NON_LOCAL_TRAFFIC="TRUE" \
+serverdensity/sd-agent
+```
+
+#### Port
+
+Note that you will need to publish the port to make use of SDStatsD:
+
+```
+docker run -d --name sd-agent \
+-v /var/run/docker.sock:/var/run/docker.sock:ro \
+-v /proc/:/host/proc/:ro \
+-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+-e AGENT_KEY=$AGENT_KEY \
+-e ACCOUNT=$ACCOUNT \
+-e SDSTATSD="TRUE" \
+-e NON_LOCAL_TRAFFIC="TRUE" \
+-p 127.0.0.1:8125:8125/udp \
+serverdensity/sd-agent
+```
+The above example will make the port available on the host only. If you want the port to be available from anywhere you should use the following instead:
+
+```
+-p 8125:8125/udp
 ```
 
 ## Enabling Plugins

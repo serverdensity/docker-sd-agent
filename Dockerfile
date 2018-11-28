@@ -31,7 +31,7 @@ VOLUME ["/conf.d", "/checks.d", "/plugins"]
 # Expose supervisord port
 EXPOSE 9001/tcp
 
-# Expose statsd port
+# Expose SDStatsD port
 EXPOSE 8125/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
