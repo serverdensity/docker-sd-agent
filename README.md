@@ -24,7 +24,7 @@ The following environment variables can be used when running the container:
 * `PROXY_PORT` - Configures a proxy port for the agent
 * `PROXY_USER` - Configures a proxy user for the agent
 * `PROXY_PASSWORD` - Configures a proxy password for the agent
-* `NON_LOCAL_TRAFFIC` - Enable (non local traffic support)[https://support.serverdensity.com/hc/en-us/articles/360001065203]
+* `NON_LOCAL_TRAFFIC` - Enable [non local traffic support](https://support.serverdensity.com/hc/en-us/articles/360001065203)
 * `CONTAINER_SIZE` - Set to `TRUE` to enable container size metrics
 * `IMAGE_STATS` - Set to `TRUE` to enable image stat metrics
 * `IMAGE_SIZE` - Set to `TRUE` to enable image size metrics
@@ -36,7 +36,7 @@ The following environment variables can be used when running the container:
 * `SDSTATSD_SO_RCVBUF` - The number of bytes allocated to the statsd socket receive buffer
 
 ## Building the image
-Download the [Dockerfile](Dockerfile) and [entrypoint.sh](entrypoint.sh) script, and build the image.
+Download the [Dockerfile](https://github.com/serverdensity/docker-sd-agent/blob/master/Dockerfile) and [entrypoint.sh](https://github.com/serverdensity/docker-sd-agent/blob/master/entrypoint.sh) script, and build the image.
 
 ```
 docker build -t sd-agent .
