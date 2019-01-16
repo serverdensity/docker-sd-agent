@@ -1,0 +1,6 @@
+init_config:
+
+instances:
+  - nginx_status_url: http://172.17.42.1/nginx_status/
+     tags:
+       - instance:foo
