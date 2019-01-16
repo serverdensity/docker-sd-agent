@@ -1,0 +1,21 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: nginx
+    ports:
+      - 80:80
+  mon:
+    build:
+      context: mon
+    environment:
+      - AGENT_KEY=
+      - ACCOUNT=
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    depends_on:
+      - nginx
+    pid: "host"
+
