@@ -1,0 +1,10 @@
+init_config:
+  timeout: 10
+instances:
+  - server: example.com
+  - server: 8.8.8.8
+    port: 53
+    timeout: 100
+    tags:
+      - dns
+      - google
