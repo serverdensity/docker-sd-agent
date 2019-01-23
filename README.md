@@ -91,7 +91,25 @@ The above example will make the port available on the host only. If you want the
 ```
 
 ## Enabling Plugins
-### Official Plugins
+### Official Plugins - Using sd-agent as a Base Image
+You can enable official plugins by creating a Dockerfile, using `serverdensity/sd-agent:latest` as a base image, and installing the plugin and copying the config to the container.
+
+For example:
+```
+FROM serverdensity/sd-agent
+
+# Install the MySQL plugin
+RUN apt-get update && apt-get install sd-agent-mysql -y
+# Add MySQL check configuration
+ADD mysql.yaml /etc/sd-agent/conf.d/mysql.yaml
+
+# Cleanup apt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+```
+Please see the examples directory for more examples.
+
+
+### Official Plugins - Using mounted volumes
 You can enable official plugins by mounting the conf.d & checks.d folders which will be copied to the correct locations for the agent when the container starts. Checks and config files can be found at the [sd-agent-core-plugins repo](https://github.com/serverdensity/sd-agent-core-plugins).
 
 The example below is for MySQL, however any plugin can be used.
@@ -130,7 +148,25 @@ The example below is for MySQL, however any plugin can be used.
 
 Now when the container starts the checks and their configs will be copied to the correct directories.
 
-### Custom plugins - v2 (Preferred)
+### Custom plugins - v2 (Preferred) - Using sd-agent as a Base Image
+You can enable official plugins by creating a Dockerfile, using `serverdensity/sd-agent:latest` as a base image, and copying the plugin and config to the container.
+
+1. Create a custom plugin as per the [Information about Custom Plugins - v2](https://support.serverdensity.com/hc/en-us/articles/115014887548) document.
+
+2. Create a Dockerfile using `serverdensity/sd-agent:latest` as a base image, copying the plugin and config to the container
+```
+FROM serverdensity/sd-agent
+
+# Add Custom check configuration
+ADD custom.yaml /etc/sd-agent/conf.d/custom.yaml
+
+# Add Custom check code
+ADD custom.py /usr/share/python/sd-agent/checks.d/custom.py
+```
+Please see the examples directory for more examples.
+
+
+### Custom plugins - v2 (Preferred) - Using mounted volumes
 1. Create a custom plugin as per the [Information about Custom Plugins - v2](https://support.serverdensity.com/hc/en-us/articles/115014887548) document.
 
 2. Create a configuration directory (if you're using official plugins too you may already have this) and copy your custom plugin `conf.yaml` files to the new directory:
@@ -168,6 +204,9 @@ Now when the container starts the checks and their configs will be copied to the
 Now when the container starts your v2 custom plugins will be copied to the correct directories for the agent.
 
 ### Custom plugins - v1 (Legacy)
+
+| WARNING: This method will soon be deprecated. If you have v1 custom plugins, we recommend converting them to [v2 Custom plugins instead](https://support.serverdensity.com/hc/en-us/articles/360001082746) |
+| --- |
 1. Create a plugins directory and copy your `check.py` files to the new directory:
 
     ```
